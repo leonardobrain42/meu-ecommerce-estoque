@@ -6,7 +6,7 @@ echo "========================================="
 echo "Parando aplicação Estoque"
 echo "========================================="
 
-docker-compose down
+docker compose down
 
 echo ""
 echo "✓ Containers parados e removidos!"
