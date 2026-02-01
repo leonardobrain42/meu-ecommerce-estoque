@@ -1,0 +1,45 @@
+# ===== Maven =====
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# ===== Gradle (se algum usar) =====
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# ===== Spring =====
+*.log
+logs/
+
+# ===== Java =====
+*.class
+
+# ===== IDEs =====
+## IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+
+## Eclipse / STS
+.project
+.classpath
+.settings/
+.springBeans
+.sts4-cache/
+
+## VS Code
+.vscode/
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+
+# ===== Docker =====
+.env
+docker-compose.override.yml
+
+# ===== Kafka local =====
+data/
