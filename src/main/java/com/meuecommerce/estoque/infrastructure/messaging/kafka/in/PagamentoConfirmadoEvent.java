@@ -1,7 +1,7 @@
 package com.meuecommerce.estoque.infrastructure.messaging.kafka.in;
 
 public record PagamentoConfirmadoEvent(
-     String pedidoId,
+    Long pedidoId,
     String sku,
     Integer quantidade
 ) {

@@ -4,9 +4,9 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import com.meuecommerce.estoque.application.EstoqueService;
+import com.meuecommerce.estoque.domain.events.PedidoCriadoEvent;
 import com.meuecommerce.estoque.infrastructure.messaging.kafka.in.PagamentoConfirmadoEvent;
 import com.meuecommerce.estoque.infrastructure.messaging.kafka.in.PagamentoFalhouEvent;
-import com.meuecommerce.estoque.infrastructure.messaging.kafka.in.PedidoCriadoEvent;
 
 @Component
 public class EstoqueEventListener {
@@ -19,11 +19,7 @@ public class EstoqueEventListener {
 
     @KafkaListener(topics = "pedido-criado", groupId = "estoque-service")
     public void onPedidoCriado(PedidoCriadoEvent event) {
-        service.reservarEstoque(
-            event.pedidoId(),
-            event.sku(),
-            event.quantidade()
-        );
+        service.reservarEstoque(event);
     }
 
     @KafkaListener(topics = "pagamento-confirmado", groupId = "estoque-service")

@@ -1,5 +1,6 @@
 package com.meuecommerce.estoque.application;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -8,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.meuecommerce.estoque.application.ports.EstoqueEventPublisher;
 import com.meuecommerce.estoque.domain.Estoque;
 import com.meuecommerce.estoque.domain.EstoqueRepository;
+import com.meuecommerce.estoque.domain.events.ItemPedidoEvent;
+import com.meuecommerce.estoque.domain.events.PedidoCriadoEvent;
 import com.meuecommerce.estoque.exceptions.EstoqueNaoEncontradoException;
 
 @Service
@@ -42,33 +45,56 @@ public class EstoqueService {
     }
 
     @Transactional
-    public void reservarEstoque(String pedidoId, String sku, Integer quantidade) {
-        Estoque estoque = buscarPorSku(sku);
+    public void reservarEstoque(PedidoCriadoEvent event) {
+        
+        List<ItemPedidoEvent> itensReservados = new ArrayList<>();
 
-        estoque.reservar(pedidoId, quantidade);
+    for (ItemPedidoEvent item : event.itens()) {
 
-        // estado já alterado no domínio
-        publisher.estoqueReservado(
-            pedidoId,
-            sku,
-            quantidade
+        Estoque estoque = buscarPorSku(item.sku());
+
+        boolean reservado = estoque.reservar(
+                event.pedidoId(),
+                item.quantidade()
         );
+
+        if (!reservado) {
+            // compensação
+            for (ItemPedidoEvent reservadoItem : itensReservados) {
+                Estoque estoqueCompensar = buscarPorSku(reservadoItem.sku());
+                estoqueCompensar.liberarReserva(
+                        event.pedidoId()
+                );
+            }
+
+            publisher.estoqueFalhaReserva(
+                event.pedidoId()
+            );
+
+            return;
+        }
+
+        itensReservados.add(item);
+
+        publisher.estoqueReservado(event.pedidoId());
+    }
+
+    // só publica sucesso quando TODOS foram reservados
+    publisher.estoqueReservado(
+        event.pedidoId()
+    );
     }
 
     @Transactional
-    public void liberarReserva(String pedidoId, String sku, Integer quantidade) {
+    public void liberarReserva(Long pedidoId, String sku, Integer quantidade) {
         Estoque estoque = buscarPorSku(sku);
         estoque.liberarReserva(pedidoId);
 
-        publisher.estoqueLiberado(
-            pedidoId,
-            sku,
-            quantidade
-        );
+        publisher.estoqueLiberado(pedidoId);
     }
 
     @Transactional
-    public void confirmarReserva(String pedidoId, String sku, Integer quantidade) {
+    public void confirmarReserva(Long pedidoId, String sku, Integer quantidade) {
         Estoque estoque = buscarPorSku(sku);
         estoque.confirmarReserva(pedidoId);
 

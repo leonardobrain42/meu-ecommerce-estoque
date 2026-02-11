@@ -23,7 +23,7 @@ class ReservaEstoque {
     private Long id;
 
     @Column(name = "pedido_id", nullable = false)
-    private String pedidoId;
+    private Long pedidoId;
 
     @Column(nullable = false)
     private Integer quantidade;
@@ -34,12 +34,12 @@ class ReservaEstoque {
 
     protected ReservaEstoque() {}
 
-    ReservaEstoque(Estoque estoque, String pedidoId, Integer quantidade) {
+    ReservaEstoque(Estoque estoque, Long pedidoId, Integer quantidade) {
         this.estoque = estoque;
         this.pedidoId = pedidoId;
         this.quantidade = quantidade;
     }
 
-    public String getPedidoId() { return pedidoId; }
+    public Long getPedidoId() { return pedidoId; }
     public Integer getQuantidade() { return quantidade; }
 }

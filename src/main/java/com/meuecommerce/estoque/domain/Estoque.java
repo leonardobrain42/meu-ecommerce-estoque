@@ -60,7 +60,7 @@ public class Estoque {
        Comportamento de domínio
        ====================== */
 
-    public void reservar(String pedidoId, int quantidade) {
+    public boolean reservar(Long pedidoId, int quantidade) {
         validarQuantidade(quantidade);
 
         if (quantidadeDisponivel() < quantidade) {
@@ -74,17 +74,17 @@ public class Estoque {
             throw new IllegalStateException("Pedido já possui reserva");
         }
 
-        reservas.add(new ReservaEstoque(this, pedidoId, quantidade));
+        return reservas.add(new ReservaEstoque(this, pedidoId, quantidade));
     }
 
-    public void confirmarReserva(String pedidoId) {
+    public void confirmarReserva(Long pedidoId) {
         ReservaEstoque reserva = obterReserva(pedidoId);
 
         this.quantidadeTotal -= reserva.getQuantidade();
         reservas.remove(reserva);
     }
 
-    public void liberarReserva(String pedidoId) {
+    public void liberarReserva(Long pedidoId) {
         ReservaEstoque reserva = obterReserva(pedidoId);
         reservas.remove(reserva);
     }
@@ -112,7 +112,7 @@ public class Estoque {
             .sum();
     }
 
-    private ReservaEstoque obterReserva(String pedidoId) {
+    private ReservaEstoque obterReserva(Long pedidoId) {
         return reservas.stream()
             .filter(r -> r.getPedidoId().equals(pedidoId))
             .findFirst()

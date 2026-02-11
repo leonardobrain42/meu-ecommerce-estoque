@@ -2,12 +2,12 @@ package com.meuecommerce.estoque.domain.events;
 
 import java.time.Instant;
 
-public class EstoqueReservadoEvent {
-
+public class EstoqueFalhaReservaEvent {
+    
     private final Long pedidoId;
     private final Instant ocorridoEm;
 
-    public EstoqueReservadoEvent(
+    public EstoqueFalhaReservaEvent(
         Long pedidoId
     ) {
         this.pedidoId = pedidoId;
@@ -22,3 +22,4 @@ public class EstoqueReservadoEvent {
         return ocorridoEm;
     }
 }
+

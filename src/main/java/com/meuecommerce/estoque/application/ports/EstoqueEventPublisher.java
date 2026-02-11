@@ -2,19 +2,19 @@ package com.meuecommerce.estoque.application.ports;
 
 public interface EstoqueEventPublisher {
     void estoqueReservado(
-        String pedidoId,
-        String sku,
-        Integer quantidade
+        Long pedidoId
+    );
+
+    void estoqueFalhaReserva(
+        Long pedidoId
     );
 
     void estoqueLiberado(
-        String pedidoId,
-        String sku,
-        Integer quantidade
+        Long pedidoId
     );
 
     void estoqueBaixado(
-        String pedidoId,
+        Long pedidoId,
         String sku,
         Integer quantidade
     );
