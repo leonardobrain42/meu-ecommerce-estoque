@@ -1,4 +1,4 @@
-package com.meuecommerce.estoque.controllers;
+package com.meuecommerce.estoque.infrastructure.api;
 
 import java.util.List;
 import java.util.Map;

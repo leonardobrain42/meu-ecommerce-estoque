@@ -47,7 +47,7 @@ public class EstoqueService {
     @Transactional
     public void reservarEstoque(PedidoCriadoEvent event) {
         
-        List<ItemPedidoEvent> itensReservados = new ArrayList<>();
+    List<ItemPedidoEvent> itensReservados = new ArrayList<>();
 
     for (ItemPedidoEvent item : event.itens()) {
 

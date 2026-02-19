@@ -51,6 +51,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
       - estoque_network
+      - ecommerce-shared
     restart: unless-stopped
 
   kafdrop:
@@ -68,6 +69,7 @@ services:
         condition: service_started
     networks:
       - estoque_network
+      - ecommerce-shared
 
   estoque_app:
     build:
@@ -94,6 +96,7 @@ services:
         condition: service_started
     networks:
       - estoque_network
+      - ecommerce-shared
     restart: unless-stopped
 
 volumes:
@@ -102,3 +105,6 @@ volumes:
 networks:
   estoque_network:
     driver: bridge
+  ecommerce-shared:
+    external: true
+    name: ecommerce-shared-network 
