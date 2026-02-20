@@ -9,6 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.meuecommerce.estoque.application.ports.EstoqueEventPublisher;
 import com.meuecommerce.estoque.domain.Estoque;
 import com.meuecommerce.estoque.domain.EstoqueRepository;
+import com.meuecommerce.estoque.domain.events.EstoqueBaixadoEvent;
+import com.meuecommerce.estoque.domain.events.EstoqueFalhaReservaEvent;
+import com.meuecommerce.estoque.domain.events.EstoqueLiberadoEvent;
+import com.meuecommerce.estoque.domain.events.EstoqueReservadoEvent;
 import com.meuecommerce.estoque.domain.events.ItemPedidoEvent;
 import com.meuecommerce.estoque.domain.events.PedidoCriadoEvent;
 import com.meuecommerce.estoque.exceptions.EstoqueNaoEncontradoException;
@@ -68,7 +72,9 @@ public class EstoqueService {
             }
 
             publisher.estoqueFalhaReserva(
-                event.pedidoId()
+                new EstoqueFalhaReservaEvent(
+                    event.pedidoId()
+                )
             );
 
             return;
@@ -76,12 +82,14 @@ public class EstoqueService {
 
         itensReservados.add(item);
 
-        publisher.estoqueReservado(event.pedidoId());
+        publisher.estoqueReservado(
+            new EstoqueReservadoEvent(event.pedidoId())
+        );
     }
 
     // só publica sucesso quando TODOS foram reservados
     publisher.estoqueReservado(
-        event.pedidoId()
+        new EstoqueReservadoEvent(event.pedidoId())
     );
     }
 
@@ -90,7 +98,9 @@ public class EstoqueService {
         Estoque estoque = buscarPorSku(sku);
         estoque.liberarReserva(pedidoId);
 
-        publisher.estoqueLiberado(pedidoId);
+        publisher.estoqueLiberado(
+            new EstoqueLiberadoEvent(pedidoId)
+        );
     }
 
     @Transactional
@@ -99,9 +109,7 @@ public class EstoqueService {
         estoque.confirmarReserva(pedidoId);
 
         publisher.estoqueBaixado(
-            pedidoId,
-            sku,
-            quantidade
+            new EstoqueBaixadoEvent(pedidoId)
         );
     }
 

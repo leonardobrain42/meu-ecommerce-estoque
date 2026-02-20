@@ -12,45 +12,45 @@ import com.meuecommerce.estoque.domain.events.EstoqueReservadoEvent;
 @Component
 public class KafkaEstoqueEventPublisher implements EstoqueEventPublisher {
 
-    private final KafkaTemplate<Long, Object> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public KafkaEstoqueEventPublisher(KafkaTemplate<Long, Object> kafkaTemplate) {
+    public KafkaEstoqueEventPublisher(KafkaTemplate<String, Object> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
     @Override
-    public void estoqueReservado(Long pedidoId) {
+    public void estoqueReservado(EstoqueReservadoEvent event) {
         kafkaTemplate.send(
             "estoque.reservado",
-            pedidoId,
-            new EstoqueReservadoEvent(pedidoId)
+            event.getPedidoId().toString(),
+            event
         );
     }
 
     @Override
-    public void estoqueFalhaReserva(Long pedidoId) {
+    public void estoqueFalhaReserva(EstoqueFalhaReservaEvent event) {
         kafkaTemplate.send(
             "estoque.falha",
-            pedidoId,
-            new EstoqueFalhaReservaEvent(pedidoId)
+            event.getPedidoId().toString(),
+            event
         );
     }
 
     @Override
-    public void estoqueLiberado(Long pedidoId) {
+    public void estoqueLiberado(EstoqueLiberadoEvent event) {
         kafkaTemplate.send(
             "estoque.liberado",
-            pedidoId,
-            new EstoqueLiberadoEvent(pedidoId)
+            event.getPedidoId().toString(),
+            event
         );
     }
 
     @Override
-    public void estoqueBaixado(Long pedidoId, String sku, Integer quantidade) {
+    public void estoqueBaixado(EstoqueBaixadoEvent event) {
         kafkaTemplate.send(
             "estoque.baixado",
-            pedidoId,
-            new EstoqueBaixadoEvent(pedidoId)
+            event.getPedidoId().toString(),
+            event
         );
     }
     

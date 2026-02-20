@@ -1,21 +1,16 @@
 package com.meuecommerce.estoque.application.ports;
 
+import com.meuecommerce.estoque.domain.events.EstoqueBaixadoEvent;
+import com.meuecommerce.estoque.domain.events.EstoqueFalhaReservaEvent;
+import com.meuecommerce.estoque.domain.events.EstoqueLiberadoEvent;
+import com.meuecommerce.estoque.domain.events.EstoqueReservadoEvent;
+
 public interface EstoqueEventPublisher {
-    void estoqueReservado(
-        Long pedidoId
-    );
+     void estoqueReservado(EstoqueReservadoEvent event);
 
-    void estoqueFalhaReserva(
-        Long pedidoId
-    );
+    void estoqueFalhaReserva(EstoqueFalhaReservaEvent event);
 
-    void estoqueLiberado(
-        Long pedidoId
-    );
+    void estoqueLiberado(EstoqueLiberadoEvent event);
 
-    void estoqueBaixado(
-        Long pedidoId,
-        String sku,
-        Integer quantidade
-    );
+    void estoqueBaixado(EstoqueBaixadoEvent event);
 }
