@@ -82,9 +82,6 @@ public class EstoqueService {
 
         itensReservados.add(item);
 
-        publisher.estoqueReservado(
-            new EstoqueReservadoEvent(event.pedidoId())
-        );
     }
 
     // só publica sucesso quando TODOS foram reservados
@@ -129,6 +126,12 @@ public class EstoqueService {
     @Transactional(readOnly = true)
     public List<Estoque> listarTodos() {
         return repository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Estoque.ReservaInfo> listarReservasPorSku(String sku) {
+        Estoque estoque = buscarPorSku(sku);
+        return estoque.listarReservas();
     }
 
     @Transactional

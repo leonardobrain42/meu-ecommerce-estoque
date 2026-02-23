@@ -1,7 +1,9 @@
 package com.meuecommerce.estoque.domain;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -66,6 +68,8 @@ public class Estoque {
         if (quantidadeDisponivel() < quantidade) {
             throw new IllegalStateException("Estoque insuficiente para reserva");
         }
+
+        this.quantidadeTotal -= quantidade;
 
         boolean jaReservado = reservas.stream()
             .anyMatch(r -> r.getPedidoId().equals(pedidoId));
@@ -148,4 +152,23 @@ public class Estoque {
     public String getDescricao() { return descricao; }
     public Integer getQuantidadeTotal() { return quantidadeTotal; }
     public Integer getQuantidadeMinima() { return quantidadeMinima; }
+    
+    public List<ReservaInfo> listarReservas() {
+        return reservas.stream()
+            .map(r -> new ReservaInfo(r.getPedidoId(), r.getQuantidade()))
+            .collect(Collectors.toList());
+    }
+
+    public static class ReservaInfo {
+        private final Long pedidoId;
+        private final Integer quantidade;
+
+        public ReservaInfo(Long pedidoId, Integer quantidade) {
+            this.pedidoId = pedidoId;
+            this.quantidade = quantidade;
+        }
+
+        public Long getPedidoId() { return pedidoId; }
+        public Integer getQuantidade() { return quantidade; }
+    }
 }

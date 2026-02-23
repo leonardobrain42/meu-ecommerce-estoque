@@ -60,6 +60,12 @@ public class EstoqueController {
         return ResponseEntity.ok(estoques);
     }
 
+    @GetMapping("/api/estoque/sku/{sku}/reservas")
+    public ResponseEntity<List<Estoque.ReservaInfo>> listarReservas(@PathVariable String sku) {
+        List<Estoque.ReservaInfo> reservas = estoqueService.listarReservasPorSku(sku);
+        return ResponseEntity.ok(reservas);
+    }
+
 //     /**
 //      * Busca estoque por ID
 //      */
